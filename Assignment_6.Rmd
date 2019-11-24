@@ -1,0 +1,27 @@
+---
+title: "Assignment_6_JH_GA"
+author: "Jon Hart"
+date: "11/24/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(here)
+library(ggridges)
+library(ggbeeswarm)
+library(car)
+library(kableExtra)
+library(effsize)
+```
+
+```{r}
+salamander_data <- read_csv("mack_creek_vertebrates.csv") %>% 
+  clean_names()
+```
+
