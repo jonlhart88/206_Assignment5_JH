@@ -118,11 +118,14 @@ sal_counts_chi
 
 There is a significant effect of forest condition (old growth/clear cut) on where in the channel salamanders are found (pool/side-channel/cascade) for salamanders sampled in 2017. ($\chi$^2^(`r sal_counts_chi$parameter`) = `r round(sal_counts_chi$statistic,2)`, *p* = `r round(sal_counts_chi$p.value, 3)`).
 ```{r}
-# Pairwise chi-squared testing
 
-# What's driving significant association?
+# There is a significant association but what's driving significant association?
+# ...Pairwise chi-squared testing
+
+# Check variances (> |2| significant deviation from H0) 
 sal_counts_chi$stdres
 
+# Create tables for pairwise chi-square tests
 chi_table_pool_cascade <- sal_count_table %>% 
   filter(channel_class %in% c("Pool", "Cascade")) %>% 
   select(-channel_class)
@@ -135,6 +138,7 @@ chi_table_pool_sidechan <- sal_count_table %>%
   filter(channel_class %in% c("Cascade", "Side Channel")) %>% 
   select(-channel_class)
  
+ # Perform the three pairwise chi-square tests for comparison
  pool_cascade_chi <- chisq.test(chi_table_pool_cascade)
  pool_cascade_chi
  
