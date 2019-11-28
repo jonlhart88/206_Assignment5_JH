@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE )
 **Figure 2.** *The Mack Creek study site is located in the HJ Andrews Experimental Forest, Oregon. (Credit: [Dana Warren](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020))*
 
 ![](mack_creek.PNG){width=450px}  
-**Figure 3.** *Mack Creek (Credit: [Oregon State University](https://www.flickr.com/photos/oregonstateuniversity/7468126552/))*
+**Figure 3.** *Mack Creek, HJ Andrews Experimental Forest, OR (Credit: [Oregon State University](https://www.flickr.com/photos/oregonstateuniversity/7468126552/))*
 
 ```{r}
 library(tidyverse)
@@ -34,7 +34,7 @@ library(effsize)
 
 ```{r}
 
-# Visually compare annual salamander counts in old growth (OG) and clear cut (CC) sections of Mack Creek
+# A. Visually compare annual salamander counts in old growth (OG) and clear cut (CC) sections of Mack Creek
 
 salamander_data <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
@@ -63,11 +63,13 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
                      limits = c(100, 800),
                      breaks = seq(100, 800, by = 100)) +
   theme_minimal() +
-  labs(title = "Total Salamander Counts",
+  labs(title = "Pacific Giant Salamander Counts",
+       subtitle = "Mack Creek, OR (1987-2017)",
        x = "Year",
        y = "Salamander Count") +
   theme(axis.text.x = element_text(angle= 90, 
-                                   hjust = 1)) 
+                                   hjust = 1),
+        legend.title = element_blank()) 
 
             
 ```
@@ -76,7 +78,7 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
 
 
 ```{r}
-# Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth (OG) and clear cut (CC) sections of Mack Creek.  
+# B. Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth (OG) and clear cut (CC) sections of Mack Creek.  
 
 sal_count_2017 <- salamander_data %>% 
   filter(year == "2017") %>% 
@@ -103,7 +105,7 @@ kable(sal_count_props) %>%
 
 
 ```{r}
-# Using the 2017 counts found in Results B above, answer: is there a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two sections (old growth and clear cut)?
+# C.Using the 2017 counts found in Results B above, answer: is there a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two sections (old growth and clear cut)?
 
 chi_sal_counts <- sal_count_table %>% 
   select(-channel_class)
@@ -113,10 +115,10 @@ sal_counts_chi <- chisq.test(chi_sal_counts)
 sal_counts_chi
 ```
 
-There a significant effect of forest condition (old growth/clear cut) on where in the channel salamanders are found (pool/side-channel/cascade) in the salamnders sampled in 2017. ($\chi$^2^(`r sal_counts_chi$parameter`) = `r round(sal_counts_chi$statistic,2)`, *p* = `r round(sal_counts_chi$p.value, 3)`).
+There IS a significant effect of forest condition (old growth/clear cut) on where in the channel salamanders are found (pool/side-channel/cascade) for salamanders sampled in 2017. ($\chi$^2^(`r sal_counts_chi$parameter`) = `r round(sal_counts_chi$statistic,2)`, *p* = `r round(sal_counts_chi$p.value, 3)`).
 
 ```{r}
-# Compare weights of Pacific giant salamanders in clear cut and old growth forest sections of the creek in 2017.
+# D. Compare weights of Pacific giant salamanders in clear cut and old growth forest sections of the creek in 2017.
 
 sal_weights_cc <- salamander_data %>% 
   filter(year == "2017", section == "CC") 
@@ -156,14 +158,24 @@ Mean Pacific Giant Salamander size in the clear cut section of Mack Creek in 201
 
 
 ```{r}
-# Visually compare Pacific giant salamander weights between the three channel classifications. You can choose how to best visualize the weights between the three groups
+# E. Visually compare Pacific giant salamander weights between the three channel classifications. You can choose how to best visualize the weights between the three groups
 
 sal_weights_class <- salamander_data %>% 
   filter(year == "2017") %>% 
-  filter(unittype %in% c("C", "P", "SC"))
+  filter(unittype %in% c("C", "P", "SC")) 
 
+ggplot(data = sal_weights_class, aes(x = weight)) +
+  geom_histogram() +
+  facet_wrap(~channel_class)
+
+ggplot(data = sal_weights_class, aes(sample = weight)) +
+  geom_qq() +
+  facet_wrap(~channel_class) 
+
+leveneTest(weight ~ channel_class, data = sal_weights_class)
 ```
 
+Does not satisfy assumptions for ANOVA test?
 
 ### **Summary**
 
