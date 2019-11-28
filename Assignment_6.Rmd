@@ -33,6 +33,9 @@ library(effsize)
 ### **Results**
 
 ```{r}
+
+# Visually compare annual salamander counts in old growth (OG) and clear cut (CC) sections of Mack Creek
+
 salamander_data <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
   mutate(riv_section = case_when(
@@ -88,6 +91,7 @@ sal_count_props <- sal_count_table %>%
   adorn_ns(position = "front") %>% 
   rename("Channel Class" = channel_class) 
 
+# Put in nice formatted table
 kable(sal_count_props) %>% 
   kable_styling()
 
