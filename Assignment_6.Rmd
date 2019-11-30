@@ -19,6 +19,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE )
 **Figure 3.** *Mack Creek, HJ Andrews Experimental Forest, OR (Credit: [Oregon State University](https://www.flickr.com/photos/oregonstateuniversity/7468126552/))*
 
 ```{r}
+# Attach necessary packages
 library(tidyverse)
 library(janitor)
 library(here)
@@ -28,15 +29,18 @@ library(car)
 library(kableExtra)
 library(effsize)
 library(directlabels)
+library(lattice)
 ```
 ### **Data and Methods**
 
 ### **Results**
 
 ```{r}
+#-----------------
+# Results. Part A.
+#-----------------
 
-# A. Visually compare annual salamander counts in old growth (OG) and clear cut (CC) sections of Mack Creek
-
+# Wrangle salamander sample data for analyzing counts by different sections of Mack Creek
 salamander_data <- read_csv("mack_creek_vertebrates.csv") %>% 
   clean_names() %>% 
   filter(species == "DITE") %>% 
@@ -48,18 +52,25 @@ salamander_data <- read_csv("mack_creek_vertebrates.csv") %>%
             unittype == "SC" ~ "Side Channel",
             unittype == "P" ~ "Pool"))) 
   
-
+# Create data frame for salamander counts by river section
 sal_counts <- salamander_data %>% 
   group_by(year, riv_section) %>% 
   summarize(total_count = n()) 
-   
 
+# Create color vector for visualizing CC/OG sections of the river
+colors_riv_section <- c("Clear Cut" = "tan3", "Old Growth" = "darkgreen")
+   
+# Graph salamander counts for 1993-2017 in both clear cut and old growth section of Mack Creek
 ggplot(data = sal_counts, aes(x = year, y = total_count)) +
   geom_line(aes(color = riv_section),
-            size = 1) +
+            size = 1,
+            show.legend = FALSE) +
   geom_point(size = 1) +
+  scale_color_manual(values = colors_riv_section) +
+  geom_dl(aes(label= riv_section, color=riv_section), 
+          method = list("last.points", hjust = -.05)) +
   scale_x_continuous(expand = c(0,0),
-                     limits = c(1992.5, 2017.5),
+                     limits = c(1992.5, 2022),
                      breaks = seq(1993, 2017, by = 2)) +
   scale_y_continuous(expand = c(0,0),
                      limits = c(0, 500),
@@ -70,19 +81,21 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
        x = "Year",
        y = "Salamander Count") +
   theme(axis.text.x = element_text(angle= 90, 
-                                   hjust = 1),
-        legend.title = element_blank(),
-        legend.position = "bottom") 
+                                   hjust = 1))
 
             
 ```
+**Figure 4.** *Insert Caption*
 
 
-
-
+**Figure 5.** *Insert Caption*
 ```{r}
-# B. Table of 2017 salamander counts by channel classification (pool, cascades and side-channel) in old growth (OG) and clear cut (CC) sections of Mack Creek.  
+#-----------------
+# Results. Part B.
+#-----------------
 
+
+# Wrangle salamander data for comparing counts by channel classification and river section
 sal_count_2017 <- salamander_data %>% 
   filter(year == "2017") %>% 
   filter(unittype %in% c("P", "C", "SC")) %>% 
@@ -99,7 +112,7 @@ sal_count_props <- sal_count_table %>%
   adorn_ns(position = "front") %>% 
   rename("Channel Class" = channel_class) 
 
-# Put in nice formatted table
+# Put in a nicely formatted table
 kable(sal_count_props) %>% 
   kable_styling()
 
@@ -108,41 +121,47 @@ kable(sal_count_props) %>%
 
 
 ```{r}
-# C.Using the 2017 counts found in Results B above, answer: is there a significant difference in where in the channel Pacific giant salamanders are located (pool, cascade or side channel) between the two sections (old growth and clear cut)?
+#-----------------
+# Results. Part C.
+#-----------------
 
+# Create count table for Chi-Square test
 chi_sal_counts <- sal_count_table %>% 
   select(-channel_class)
 
+# Run Chi-Square test to determine significant associations between channel classification and creek section on salamander counts
 sal_counts_chi <- chisq.test(chi_sal_counts)
-
-sal_counts_chi
 
 ```
 
 There is not a significant association between forest condition (old growth/clear cut) on where in the channel salamanders are found (pool/side-channel/cascade) for salamanders sampled in 2017. ($\chi$^2^(`r sal_counts_chi$parameter`) = `r round(sal_counts_chi$statistic,2)`, *p* = `r round(sal_counts_chi$p.value, 3)`).
 
 ```{r}
-# D. Compare weights of Pacific giant salamanders in clear cut and old growth forest sections of the creek in 2017.
 
+#------------------
+# Results. Part D.
+#------------------
+
+# Create data frames for salamanders sampled in 2017 for clear cut and old growth sections of Mack Creek
 sal_weights_cc <- salamander_data %>% 
   filter(year == "2017", section == "CC") 
 
 sal_weights_og <- salamander_data %>%   
   filter(year == "2017", section == "OG") 
 
-# mean weights
+# Calculate mean weights (old growth vs. clear cut)
 mean_weights_cc <- mean(sal_weights_cc$weight, na.rm = TRUE)
 mean_weights_og <- mean(sal_weights_og$weight, na.rm = TRUE)
 
-# weights standard deviation
+# Calculate mean weight standard deviation (old growth vs. clear cut)
 sd_weights_cc <- sd(sal_weights_cc$weight, na.rm = TRUE)
 sd_weights_og <- sd(sal_weights_og$weight, na.rm = TRUE)
 
-# sample size
+# Calculate sample size (old growth vs. clear cut)
 n_2017_cc <- sum(!is.na(sal_weights_cc$weight))
 n_2017_og <- sum(!is.na(sal_weights_og$weight))
 
-# t-test
+# Perform two sided t-test on mean weights between clear cut and old growth sections of Mack Creek
 weight_ttest_og <- sal_weights_og %>% 
   pull(weight)
 
@@ -150,27 +169,29 @@ weight_ttest_cc <- sal_weights_cc %>%
   pull(weight)
 
 sal_weight_ttest <- t.test(weight_ttest_og, weight_ttest_cc)
-sal_weight_ttest 
 
-# Cohen's d, creek section
 
+# Calculate Cohen's d 
 sal_weight_d <- cohen.d(weight_ttest_cc, weight_ttest_og, na.rm = TRUE)
-sal_weight_d
+
 ```
 
 There is not enough evidence to conclude that mean Pacific Giant Salamander size in the clear cut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific Giant Salamander size in the old growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
 
 
 ```{r}
-# E. Visually compare Pacific giant salamander weights between the three channel classifications. You can choose how to best visualize the weights between the three groups
+#---------------------
+# Results. Part E.
+#---------------------
 
+# Create data frame to compare salamander weights between the three channel classifications in 2017
 sal_weights_class <- salamander_data %>% 
   filter(year == "2017") %>% 
   filter(unittype %in% c("C", "P", "SC"),
         section %in% c("CC", "OG")) %>% 
   select("year", "unittype", "weight", "section", "riv_section", "channel_class")
          
- 
+ # Create sample summary table
  sal_summary <- sal_weights_class %>% 
    group_by(channel_class) %>% 
    summarize(
@@ -180,72 +201,108 @@ sal_weights_class <- salamander_data %>%
      se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
      var_weight = var(weight, na.rm = TRUE))
 
-# Histogram & QQ plot to test normalcy
+# Create Histogram to test for normality
  ggplot(data = sal_weights_class, aes(x = weight)) +
-  geom_histogram() +
-  facet_wrap(~channel_class)
- 
-ggplot(data = sal_weights_class, aes(sample = weight)) +
-  geom_qq()+
-  facet_wrap(~channel_class) 
-
-#-----------------------
-#Means do not have normal distribution, but ANOVA is relatively robust to violations of the normality assumption and the equal variance assumption.
-#-----------------------
-
-# Run levene test to test equal variance
-leveneTest(weight ~ channel_class, data = sal_weights_class)
+  geom_histogram(color = "black",
+                 fill = "deepskyblue3") +
+  facet_wrap(~channel_class) +
+  scale_x_continuous(expand = c(0,0),
+                     breaks = seq(0, 80, by = 10)) +
+  scale_y_continuous(expand = c(0,0),
+                     limits = c(0, 130)) +
+   theme_bw() +
+   labs(title = "Salamanader Mean Weight Normality Testing (1)",
+       subtitle = "Mack Creek, OR (2017)",
+       x = "Salamander Weights (grams)",
+       y = "Count")
 ```
+**Figure 5.** *Insert Caption*
 
 
 
 ```{r}
-## Graph to compare means by channel classification
+# Create qq plot to test for normality
+ggplot(data = sal_weights_class, aes(sample = weight)) +
+  geom_qq()+
+  facet_wrap(~channel_class) +
+  theme_bw() +
+  labs(title = "Salamanader Mean Weight Normality Testing (2)",
+       subtitle = "Mack Creek, OR (2017)",
+       x = "Theoretical Quantiles",
+       y = "Sample Quantiles")
+
+#-----------------------
+# Means do not have normal distribution, but ANOVA is relatively robust to 
+# violations # of the normality assumption and the equal variance assumption.
+#-----------------------
+
+```
+**Figure 6.** *Insert Caption*
+
+
+```{r}
+# Run levene test to test equal variance
+sal_levene <- leveneTest(weight ~ channel_class, data = sal_weights_class)
+```
+
+
+
+
+```{r}
+# Create beeswarm graph to compare salamander means by channel classification
 ggplot() +
    geom_beeswarm(data = sal_weights_class,
-                 aes(x = channel_class, y = weight),
+                 aes(x = channel_class, y = weight, 
+                     color = channel_class),
                  size = 1,
-                 alpha = 0.5,
-                 color = "grey50") +
+                 show.legend = FALSE,
+                 alpha = 0.5) +
    geom_point(data = sal_summary,
               aes(x = channel_class, y = mean_weight),
-              color = "red",
-              size = 2)+
+              color = "black",
+              size = 2.5)+
    geom_errorbar(data = sal_summary,
                  aes(x = channel_class,
                      ymin = mean_weight - sd_weight,
                      ymax = mean_weight + sd_weight),
-                 width = 0.1,
-                 color = "firebrick") +
+                 width = 0.2,
+                 color = "black") +
   theme_bw() +
-  labs(title = "Mean Salamander Size by Channel Class",
+  labs(title = "Mean Salamander Size by Channel Class (2017)",
        subtitle = "Mack Creek, OR",
        x = "Channel Class",
-       y = "Salamander Weight (grams)")
+       y = "Salamander Weight (grams)") 
   
-
-
 ```
+**Figure 7.** *Insert Caption*
+
+
+
 ```{r}
-#ANOVA Test
-
+# Perform one-way ANOVA test
 salamander_aov <- aov(weight ~ channel_class, data = sal_weights_class)
-summary(salamander_aov)
 
-# ANOVA Type III Test
+
+# Perform ANOVA Type III test to compare results from type 1 ANOVA due to data skewness
 salamander_lm <- lm(weight ~ channel_class, data = sal_weights_class)
 salamander_aov_t3 <- Anova(salamander_lm)
-salamander_aov_t3
+
+#-----------------
+# No real difference between the two ANOVA tests
+#-----------------
+
+# Perform Tukey's HSD for post-hoc testing
+sal_post_hoc <- TukeyHSD(salamander_aov)
 
 
-# Tukey's HSD for post-hoc testing
-TukeyHSD(salamander_aov)
+#-----------------
+# Only means in side-channel vs. Pool creek classes are significantly different
+#-----------------
 
-
+# Get AOV outputs for in-line referencing of results
 aov_outputs <- unlist(summary(salamander_aov))
-salamander_aov
 
-# Cohen's d, salamander weight/channel classification
+# Perform Cohen's d for salamander weight/channel classification
 side_chan_class_weight <- sal_weights_class %>% 
   filter(unittype == "C") %>% 
   pull(weight)
@@ -254,11 +311,12 @@ pool_class_weight <- sal_weights_class %>%
   filter(unittype == "SC") %>% 
   pull(weight)
 
-
 creek_section_d <- cohen.d(side_chan_class_weight, pool_class_weight, na.rm = TRUE)
-creek_section_d
+
 ```
-Mean salamander weight (g) differed significantly between the side-channel and pool channel classifications (one-way ANOVA with post-hoc Tukey's HSD, F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`). Although mean salamander weight differed significantly, the effect size is small (Cohen's *d* = `r round(creek_section_d$estimate, 2)`). 
+Mean salamander weight (g) differed significantly between the three creek channel classifications (pool, cascade, side-channel) by a one-way ANOVA test F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`). However, Post-hoc Tukey's HSD revealed that only the side-channel and pool channel classifications differed significantly 
+(*p* =`r sal_post_hoc$channel_class[12]`). Though mean salamander weight differed significantly between the pool and side-channel sections of Mack Creek, the effect size is small (Cohen's *d* = `r round(creek_section_d$estimate, 2)`). 
+
 
 ### **Summary**
 
