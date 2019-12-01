@@ -10,6 +10,14 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE )
 ```
 ### **Introduction**
 
+- Examine species trends related to land use and disturbance histories
+
+- Scientific Name Dicamptodon tenebrosus
+
+- largest, and perhaps one of the most bizarre, is the pacific giant salamander. Reaching thirteen inches in length, these semi-aquatic creatures are brown and have external gills as juveniles, and are mottled brown and black as adults. Their ideal habitat is made up of the clear, icy mountain streams of the Washington and Oregon Cascades and the coastal ranges of Oregon and California. (Oregon Wild)
+
+- Although the pacific giant salamander is not a particularly threatened species, it has some potential cause for concern. As an amphibian, it depends on a clean aquatic habitat for the survival of its young, and as foraging habitat. Logging and other human activities can lead to siltation and higher temperatures of stream waters, making important salamander habitat much less desirable. Amphibians such as the pacific giant salamander are considered indicators for the declining health of waterways. They are particularly sensitive to changes in water quality and are often the first to be affected by them. Healthy waterways and roadless areas free of logging are important for supporting the secure populations of pacific giant salamanders that currently exist in Oregon. (Oregon Wild)
+
 ![](salamander_pic.PNG){width=400px}  
 **Figure 1.** *Pacific giant salamander (Credit: [Sierra Nystrom](http://natural-history-journal.blogspot.com/2017/06/pacific-giant-salamander-at-prairie.html))*
 
@@ -34,7 +42,7 @@ library(directlabels)
 ```
 ### **Data and Methods**
 
-Data for vertebrate numbers and size from 1987-2017 was provided by the Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, OR (Andrews Forest LTER). The two sub-reaches of Mack Creek sampled are in a section of clearcut forest (ca. 1963) and an upstream 500 year old coniferous forest. Sub-reaches are sampled with 2-pass electrofishing, and all captured vertebrates are measured and weighed. Beginning in 1993, the study began including sample data on Pacific giant salamanders, Dicamptodon tenebrosus, which is the core data set used in this analysis. For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-and&identifier=4027&revision=12). This analysis used chi-squared testing to compare differences between salamander counts. Mean salamander weights in 2017 were compared using a two-sided t-test for two groups (old growth vs. clear cut reaches of Mack Creek), and one-way ANOVA with post-hoc Tukey's when comparing >2 groups (channel classification); α = 0.05 was used throughout. Effect sizes were calculated using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
+Data for vertebrate numbers and size from 1987-2017 was provided by the Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, OR (Andrews Forest LTER). The two sub-reaches of Mack Creek sampled are in a section of clearcut forest (ca. 1963) and an upstream 500 year old coniferous forest. The same 150 m reaches of stream (clearcut and old- growth) are monitored annually. In addition to performing the population measurements on the aquatic vertebrates, a standard set of channel measurements (channel type, wetted widths and depths) are taken. Sub-reaches are sampled with 2-pass electrofishing, and all captured vertebrates are measured and weighed. Beginning in 1993, the study began including sample data on Pacific giant salamanders, Dicamptodon tenebrosus, which is the core data set used in this analysis. For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-and&identifier=4027&revision=12). This analysis used chi-squared testing to compare differences between salamander counts. Mean salamander weights in 2017 were compared using a two-sided t-test for two groups (old growth vs. clear cut reaches of Mack Creek), and one-way ANOVA with post-hoc Tukey's when comparing >2 groups (channel classification); α = 0.05 was used throughout. Effect sizes were calculated using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
 
 ### **Results**
 
@@ -309,7 +317,7 @@ sal_weights_class <- salamander_data %>%
 
 
 ```{r}
-# Create qq plot to test for normality
+# Create a qq plot to test for normality
 ggplot(data = sal_weights_class, aes(sample = weight)) +
   geom_qq()+
   facet_wrap(~channel_class) +
@@ -444,3 +452,5 @@ Mean salamander weight (g) differed significantly between the three creek channe
 
 ### **References**
 **Gregory S. V. 2016.** Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/27/2019.
+
+“Pacific Giant Salamander.” Wildlife Profiles, Oregon Wild, https://oregonwild.org/wildlife/pacific-giant-salamander.
