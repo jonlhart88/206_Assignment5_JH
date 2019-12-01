@@ -193,6 +193,31 @@ sal_weight_d <- cohen.d(weight_ttest_cc, weight_ttest_og, na.rm = TRUE)
 
 ```
 
+
+```{r}
+# Create histogram to explore sample data for normality (old growth vs. clear cut)
+sal_2017 <- salamander_data %>% 
+  filter(year == "2017") 
+
+ggplot(data = sal_2017, aes(x = weight)) +
+  geom_histogram(color = "black",
+                 fill = "deepskyblue3") +
+  facet_wrap(~riv_section) +
+  scale_x_continuous(expand = c(0,0),
+                     breaks = seq(0, 80, by = 10)) +
+  scale_y_continuous(expand = c(0,0),
+                     limits = c(0, 110)) +
+   theme_bw() +
+   labs(title = "Salamander Sample Normality Testing (Creek Section)",
+       subtitle = "Mack Creek, OR (2017)",
+       x = "Salamander Weights (grams)",
+       y = "Count")
+
+  
+```
+**Figure 6.**
+
+
 ```{r}
 # Create summary table for salamander weights by creek section (CC vs OG)
 
@@ -207,11 +232,10 @@ sal_summary_fc <- salamander_data %>%
      var_weight = var(weight, na.rm = TRUE)) 
 ```
 
+
+
 ```{r}
 # Creat beeswarm graph to compare salamander weights by creek section (CC vs OG)
-
-sal_2017 <- salamander_data %>% 
-  filter(year == "2017") 
 
 ggplot() +
    geom_beeswarm(data = sal_2017,
@@ -240,9 +264,9 @@ ggplot() +
 
 ```
 
-**Figure 6.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by section of the creek found (CC/OG). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
+**Figure 7.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by section of the creek found (CC/OG). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
 
-**Figure 7.** *Pacific giant salamander sample statistics in 2017 by section of Mack Creek (CC/OG)*
+**Figure 8.** *Pacific giant salamander sample statistics in 2017 by section of Mack Creek (CC/OG)*
 ```{r}
 # Create nicely formatted table for summary statistics on salamanders sampled in 2017 for old growth vs clear cut sections of Mack Creek
 
@@ -269,7 +293,6 @@ kable(sal_summary_fc_table) %>%
                 position = "center")
   
 ```
-
 
 There is not enough evidence to conclude that mean Pacific giant salamander size in the clear cut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific giant salamander size in the old growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
 
@@ -312,7 +335,7 @@ sal_weights_class <- salamander_data %>%
        y = "Count")
 ```
 
-**Figure 8.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. Data: Andrews Forest LTER*
+**Figure 9.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. Data: Andrews Forest LTER*
 
 
 
@@ -334,7 +357,7 @@ ggplot(data = sal_weights_class, aes(sample = weight)) +
 
 ```
 
-**Figure 9.** *Using a quantile-quantile plot we can assess whther the 2017 salamander sample comes from a population that has weights which are normally distributed. We do not see the linear trend that would suggest normality for all three channel classifications. Data: Andrews Forest LTER*
+**Figure 10.** *Using a quantile-quantile plot we can assess whther the 2017 salamander sample comes from a population that has weights which are normally distributed. We do not see the linear trend that would suggest normality for all three channel classifications. Data: Andrews Forest LTER*
 
 
 ```{r}
@@ -374,10 +397,10 @@ ggplot() +
   
 ```
 
-**Figure 10.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
+**Figure 11.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
 
 
-**Figure 11.** *Pacific giant salamander sample statistics in 2017 by different channel classifications in Mack Creek*
+**Figure 12.** *Pacific giant salamander sample statistics in 2017 by different channel classifications in Mack Creek*
 ```{r}
 # Put summary statistics into a nicely formatted/renamed table
  
