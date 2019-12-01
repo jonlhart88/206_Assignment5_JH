@@ -1,5 +1,5 @@
 ---
-title: "Effects of forest condition and creek microhabitats on Pacific Giant Salamander abundance and size"
+title: "Effects of forest condition and creek microhabitats on Pacific giant salamanders' abundance and size"
 subtitle: "Study Site: Mack Creek, HJ Andrews Forest, Oregon, USA"
 author: "Report by Jon Hart & Garrett Eyer"
 output: html_document
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE )
 ### **Introduction**
 
 ![](salamander_pic.PNG){width=400px}  
-**Figure 1.** *Pacific Giant Salamander (Credit: [Sierra Nystrom](http://natural-history-journal.blogspot.com/2017/06/pacific-giant-salamander-at-prairie.html))*
+**Figure 1.** *Pacific giant salamander (Credit: [Sierra Nystrom](http://natural-history-journal.blogspot.com/2017/06/pacific-giant-salamander-at-prairie.html))*
 
 ![](map1.PNG){width=400px}  
 **Figure 2.** *The Mack Creek study site is located in the HJ Andrews Experimental Forest, Oregon. (Credit: [Dana Warren](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020))*
@@ -89,10 +89,10 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
             
 ```
 
-**Figure 4.** *Number of Pacific Giant Salamanders recorded in Mack Creek from 1993-2017. Salamander counts have been seperated by whether they were recorded in the section of creek that runs through old growth forest or forest that was clear cut. Data: Andrews Forest LTER*
+**Figure 4.** *Number of Pacific giant salamanders recorded in Mack Creek from 1993-2017. Salamander counts have been seperated by whether they were recorded in the section of creek that runs through old growth forest or forest that was clear cut. Data: Andrews Forest LTER*
 
 
-**Figure 5.** *Number of Pacific Giant Salamanders recorded in Mack Creek in 2017 by creek section (OG/CC) and channel classification.*
+**Figure 5.** *Number of Pacific giant salamanders recorded in Mack Creek in 2017 by creek section (OG/CC) and channel classification.*
 ```{r}
 #-----------------
 # Results. Part B.
@@ -230,9 +230,9 @@ ggplot() +
 
 ```
 
-**Figure 6.** *Recorded weights of Pacific Giant Salamanders sampled in Mack Creek in 2017 by section of the creek found (CC/OG). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
+**Figure 6.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by section of the creek found (CC/OG). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
 
-**Figure 7.** *Pacific Giant Salamander sample statistics in 2017 by section of Mack Creek (CC/OG)*
+**Figure 7.** *Pacific giant salamander sample statistics in 2017 by section of Mack Creek (CC/OG)*
 ```{r}
 # Create nicely formatted table for summary statistics on salamanders sampled in 2017 for old growth vs clear cut sections of Mack Creek
 
@@ -260,7 +260,7 @@ kable(sal_summary_fc_table) %>%
 ```
 
 
-There is not enough evidence to conclude that mean Pacific Giant Salamander size in the clear cut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific Giant Salamander size in the old growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
+There is not enough evidence to conclude that mean Pacific giant salamander size in the clear cut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific giant salamander size in the old growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
 
 
 ```{r}
@@ -301,7 +301,7 @@ sal_weights_class <- salamander_data %>%
        y = "Count")
 ```
 
-**Figure 8.** *Recorded weights of Pacific Giant Salamanders sampled in Mack Creek in 2017 by channel classification. Data: Andrews Forest LTER*
+**Figure 8.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. Data: Andrews Forest LTER*
 
 
 
@@ -363,10 +363,10 @@ ggplot() +
   
 ```
 
-**Figure 10.** *Recorded weights of Pacific Giant Salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
+**Figure 10.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
 
 
-**Figure 11.** *Pacific Giant Salamander sample statistics in 2017 by different channel classifications in Mack Creek*
+**Figure 11.** *Pacific giant salamander sample statistics in 2017 by different channel classifications in Mack Creek*
 ```{r}
 # Put summary statistics into a nicely formatted/renamed table
  
