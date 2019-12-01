@@ -1,6 +1,7 @@
 ---
-title: "Assignment_6_JH_GE"
-author: "Jon Hart & Garrett Eyer"
+title: "Effects of forest condition and creek microhabitats on Pacific Giant Salamander abundance and size"
+subtitle: "Study Site: Mack Creek, HJ Andrews Forest, Oregon, USA"
+author: "Report by Jon Hart & Garrett Eyer"
 output: html_document
 ---
 
@@ -29,7 +30,7 @@ library(car)
 library(kableExtra)
 library(effsize)
 library(directlabels)
-library(lattice)
+
 ```
 ### **Data and Methods**
 
@@ -55,7 +56,8 @@ salamander_data <- read_csv("mack_creek_vertebrates.csv") %>%
 # Create data frame for salamander counts by river section
 sal_counts <- salamander_data %>% 
   group_by(year, riv_section) %>% 
-  summarize(total_count = n()) 
+  summarize(total_count = n())
+ 
 
 # Create color vector for visualizing CC/OG sections of the river
 colors_riv_section <- c("Clear Cut" = "tan3", "Old Growth" = "darkgreen")
@@ -65,7 +67,7 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
   geom_line(aes(color = riv_section),
             size = 1,
             show.legend = FALSE) +
-  geom_point(size = 1) +
+  geom_point(size = 1.5) +
   scale_color_manual(values = colors_riv_section) +
   geom_dl(aes(label= riv_section, color=riv_section), 
           method = list("last.points", hjust = -.05)) +
@@ -73,22 +75,23 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
                      limits = c(1992.5, 2022),
                      breaks = seq(1993, 2017, by = 2)) +
   scale_y_continuous(expand = c(0,0),
-                     limits = c(0, 500),
+                     limits = c(0, 400),
                      breaks = seq(0, 500, by = 100)) +
   theme_minimal() +
-  labs(title = "Pacific Giant Salamander Counts",
+  labs(title = "Pacific Giant Salamander Counts by Forest Condition",
        subtitle = "Mack Creek, OR (1993-2017)",
        x = "Year",
        y = "Salamander Count") +
-  theme(axis.text.x = element_text(angle= 90, 
-                                   hjust = 1))
+  theme(axis.text.x = element_text(angle= 45, 
+                                   hjust = 1),
+        axis.ticks = element_line(size = 1)) 
 
             
 ```
-**Figure 4.** *Insert Caption*
+**Figure 4.** *Number of Pacific Giant Salamanders recorded in Mack Creek from 1993-2017. Salamander counts have been seperated by whether they were recorded in the section of creek that runs through old growth forest or forest that was clear cut. Data: Andrews Forest LTER*
 
 
-**Figure 5.** *Insert Caption*
+**Figure 5.** *Number of Pacific Giant Salamanders recorded in Mack Creek in 2017 by creek section (OG/CC) and channel classification.*
 ```{r}
 #-----------------
 # Results. Part B.
@@ -114,7 +117,9 @@ sal_count_props <- sal_count_table %>%
 
 # Put in a nicely formatted table
 kable(sal_count_props) %>% 
-  kable_styling()
+  kable_styling(bootstrap_options = "bordered",
+                full_width = F,
+                position = "center")
 
 
 ```
@@ -143,6 +148,7 @@ There is not a significant association between forest condition (old growth/clea
 #------------------
 
 # Create data frames for salamanders sampled in 2017 for clear cut and old growth sections of Mack Creek
+
 sal_weights_cc <- salamander_data %>% 
   filter(year == "2017", section == "CC") 
 
@@ -176,6 +182,82 @@ sal_weight_d <- cohen.d(weight_ttest_cc, weight_ttest_og, na.rm = TRUE)
 
 ```
 
+```{r}
+# Create summary table for salamander weights by creek section (CC vs OG)
+
+sal_summary_fc <- salamander_data %>% 
+  filter(year == "2017") %>% 
+   group_by(riv_section) %>% 
+   summarize(
+     mean_weight = mean(weight, na.rm = TRUE),
+     sd_weight = sd(weight, na.rm = TRUE),
+     sample_size = n(),
+     se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
+     var_weight = var(weight, na.rm = TRUE)) 
+```
+
+```{r}
+# Creat beeswarm graph to compare salamander weights by creek section (CC vs OG)
+
+sal_2017 <- salamander_data %>% 
+  filter(year == "2017") 
+
+ggplot() +
+   geom_beeswarm(data = sal_2017,
+                 aes(x = riv_section, y = weight, 
+                     color = riv_section),
+                 size = 1,
+                 show.legend = FALSE,
+                 alpha = 0.5) +
+  scale_color_manual(values = colors_riv_section) +
+   geom_point(data = sal_summary_fc,
+              aes(x = riv_section, y = mean_weight),
+              color = "black",
+              size = 2.5)+
+   geom_errorbar(data = sal_summary_fc,
+                 aes(x = riv_section,
+                     ymin = mean_weight - sd_weight,
+                     ymax = mean_weight + sd_weight),
+                 width = 0.1,
+                 size = .75,
+                 color = "black") +
+  theme_bw() +
+  labs(title = "Mean Salamander Weight by Creek Section (2017)",
+       subtitle = "Mack Creek, OR",
+       x = "Creek Section (Forest Condition)",
+       y = "Salamander Weight (grams)") 
+
+```
+**Figure 6.** *Recorded weights of Pacific Giant Salamanders sampled in Mack Creek in 2017 by section of the creek found (CC/OG). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
+
+**Figure 7.** *Pacific Giant Salamander sample statistics in 2017 by section of Mack Creek (CC/OG)*
+```{r}
+# Create nicely formatted table for summary statistics on salamanders sampled in 2017 for old growth vs clear cut sections of Mack Creek
+
+sal_summary_fc_table <- salamander_data %>% 
+  filter(year == "2017") %>% 
+   group_by(riv_section) %>% 
+   summarize(
+     mean_weight = mean(weight, na.rm = TRUE),
+     sd_weight = sd(weight, na.rm = TRUE),
+     sample_size = n(),
+     se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
+     var_weight = var(weight, na.rm = TRUE)) %>% 
+  rename("Creek Section" = riv_section,
+         "Mean Weight (g)" = mean_weight,
+         "Standard Deviation (g)" = sd_weight,
+         "Sample Size" = sample_size,
+         "Standard error" = se_weight,
+         "Variance" = var_weight)
+
+kable(sal_summary_fc_table) %>% 
+  kable_styling(bootstrap_options = "bordered",
+                full_width = F,
+                position = "center")
+  
+```
+
+
 There is not enough evidence to conclude that mean Pacific Giant Salamander size in the clear cut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific Giant Salamander size in the old growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
 
 
@@ -199,7 +281,7 @@ sal_weights_class <- salamander_data %>%
      sd_weight = sd(weight, na.rm = TRUE),
      sample_size = n(),
      se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
-     var_weight = var(weight, na.rm = TRUE))
+     var_weight = var(weight, na.rm = TRUE)) 
 
 # Create Histogram to test for normality
  ggplot(data = sal_weights_class, aes(x = weight)) +
@@ -211,12 +293,12 @@ sal_weights_class <- salamander_data %>%
   scale_y_continuous(expand = c(0,0),
                      limits = c(0, 130)) +
    theme_bw() +
-   labs(title = "Salamanader Mean Weight Normality Testing (1)",
+   labs(title = "Salamanader Sample Normality Testing (1)",
        subtitle = "Mack Creek, OR (2017)",
        x = "Salamander Weights (grams)",
        y = "Count")
 ```
-**Figure 5.** *Insert Caption*
+**Figure 8.** *Recorded weights of Pacific Giant Salamanders sampled in Mack Creek in 2017 by channel classification. Data: Andrews Forest LTER*
 
 
 
@@ -226,7 +308,7 @@ ggplot(data = sal_weights_class, aes(sample = weight)) +
   geom_qq()+
   facet_wrap(~channel_class) +
   theme_bw() +
-  labs(title = "Salamanader Mean Weight Normality Testing (2)",
+  labs(title = "Salamanader Sample Normality Testing (2)",
        subtitle = "Mack Creek, OR (2017)",
        x = "Theoretical Quantiles",
        y = "Sample Quantiles")
@@ -237,7 +319,7 @@ ggplot(data = sal_weights_class, aes(sample = weight)) +
 #-----------------------
 
 ```
-**Figure 6.** *Insert Caption*
+**Figure 9.** *Using a quantile-quantile plot we can assess whther the 2017 salamander sample comes from a population that has weights which are normally distributed. We do not see the linear trend that would suggest normality for all three channel classifications. Data: Andrews Forest LTER*
 
 
 ```{r}
@@ -249,6 +331,7 @@ sal_levene <- leveneTest(weight ~ channel_class, data = sal_weights_class)
 
 
 ```{r}
+
 # Create beeswarm graph to compare salamander means by channel classification
 ggplot() +
    geom_beeswarm(data = sal_weights_class,
@@ -265,17 +348,44 @@ ggplot() +
                  aes(x = channel_class,
                      ymin = mean_weight - sd_weight,
                      ymax = mean_weight + sd_weight),
-                 width = 0.2,
+                 width = 0.1,
+                 size = .75,
                  color = "black") +
   theme_bw() +
-  labs(title = "Mean Salamander Size by Channel Class (2017)",
+  labs(title = "Salamander Weight by Channel Classification (2017)",
        subtitle = "Mack Creek, OR",
        x = "Channel Class",
        y = "Salamander Weight (grams)") 
   
 ```
-**Figure 7.** *Insert Caption*
+**Figure 10.** *Recorded weights of Pacific Giant Salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
 
+
+**Figure 11.** *Pacific Giant Salamander sample statistics in 2017 by different channel classifications in Mack Creek*
+```{r}
+# Put summary statistics into a nicely formatted/renamed table
+ 
+sal_summary_table_tidy <- sal_weights_class %>% 
+   group_by(channel_class) %>% 
+   summarize(
+     mean_weight = mean(weight, na.rm = TRUE),
+     sd_weight = sd(weight, na.rm = TRUE),
+     sample_size = n(),
+     se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
+     var_weight = var(weight, na.rm = TRUE)) %>% 
+rename("Channel Class" = channel_class,
+         "Mean Weight (g)" = mean_weight,
+         "Standard Deviation (g)" = sd_weight,
+         "Sample Size" = sample_size,
+         "Standard error" = se_weight,
+         "Variance" = var_weight)
+ 
+
+kable(sal_summary_table_tidy) %>% 
+   kable_styling(bootstrap_options = "bordered",
+                full_width = F,
+                position = "center")
+```
 
 
 ```{r}
@@ -314,11 +424,14 @@ pool_class_weight <- sal_weights_class %>%
 creek_section_d <- cohen.d(side_chan_class_weight, pool_class_weight, na.rm = TRUE)
 
 ```
-Mean salamander weight (g) differed significantly between the three creek channel classifications (pool, cascade, side-channel) by a one-way ANOVA test F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`). However, Post-hoc Tukey's HSD revealed that only the side-channel and pool channel classifications differed significantly 
-(*p* =`r sal_post_hoc$channel_class[12]`). Though mean salamander weight differed significantly between the pool and side-channel sections of Mack Creek, the effect size is small (Cohen's *d* = `r round(creek_section_d$estimate, 2)`). 
+Mean salamander weight (g) differed significantly between the three creek channel classifications (pool, cascade, side-channel) by a one-way ANOVA test (F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`). Further pairwise testing using pot-hoc Tukey's HSD revealed that mean salamander weight was only significantly different between side-channel and pool classifications (*p* = `r round(sal_post_hoc$channel_class[12],3)`). Though a significant difference in mean weight was found between salamanders sampled in the pools vs. side-channel sections of Mack Creek in 2017, the effect size was small (Cohen's *d* = `r round(creek_section_d$estimate, 2)`). 
 
 
 ### **Summary**
+
+-
+-
+-
 
 ### **References**
 **Gregory S. V. 2016.** Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/27/2019.
