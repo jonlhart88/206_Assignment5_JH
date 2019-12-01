@@ -34,6 +34,8 @@ library(directlabels)
 ```
 ### **Data and Methods**
 
+Data for vertebrate numbers and size from 1987-2017 was provided by the Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, OR (Andrews Forest LTER). The two sub-reaches of Mack Creek sampled are in a section of clearcut forest (ca. 1963) and an upstream 500 year old coniferous forest. Sub-reaches are sampled with 2-pass electrofishing, and all captured vertebrates are measured and weighed. Beginning in 1993, the study began including sample data on Pacific giant salamanders, Dicamptodon tenebrosus, which is the core data set used in this analysis. For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-and&identifier=4027&revision=12). This analysis used chi-squared testing to compare differences between salamander counts. Mean salamander weights in 2017 were compared using a two-sided t-test for two groups (old growth vs. clear cut reaches of Mack Creek), and one-way ANOVA with post-hoc Tukey's when comparing >2 groups (channel classification); α = 0.05 was used throughout. Effect sizes were calculated using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
+
 ### **Results**
 
 ```{r}
@@ -165,8 +167,8 @@ sd_weights_cc <- sd(sal_weights_cc$weight, na.rm = TRUE)
 sd_weights_og <- sd(sal_weights_og$weight, na.rm = TRUE)
 
 # Calculate sample size (old growth vs. clear cut)
-n_2017_cc <- sum(!is.na(sal_weights_cc$weight))
-n_2017_og <- sum(!is.na(sal_weights_og$weight))
+n_2017_cc <- count(sal_weights_cc, na.rm = TRUE)
+n_2017_og <- count(sal_weights_og, na.rm = TRUE)
 
 # Perform two sided t-test on mean weights between clear cut and old growth sections of Mack Creek
 weight_ttest_og <- sal_weights_og %>% 
@@ -245,6 +247,7 @@ sal_summary_fc_table <- salamander_data %>%
      sample_size = n(),
      se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
      var_weight = var(weight, na.rm = TRUE)) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
   rename("Creek Section" = riv_section,
          "Mean Weight (g)" = mean_weight,
          "Standard Deviation (g)" = sd_weight,
@@ -378,6 +381,7 @@ sal_summary_table_tidy <- sal_weights_class %>%
      sample_size = n(),
      se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
      var_weight = var(weight, na.rm = TRUE)) %>% 
+mutate_if(is.numeric, round, 2) %>% 
 rename("Channel Class" = channel_class,
          "Mean Weight (g)" = mean_weight,
          "Standard Deviation (g)" = sd_weight,
