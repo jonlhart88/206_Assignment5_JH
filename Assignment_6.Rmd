@@ -10,25 +10,15 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE )
 ```
 ### **Introduction**
 
-- Examine species trends related to land use and disturbance histories
-
-- Scientific Name Dicamptodon tenebrosus
-
-- largest, and perhaps one of the most bizarre, is the pacific giant salamander. Reaching thirteen inches in length, these semi-aquatic creatures are brown and have external gills as juveniles, and are mottled brown and black as adults. Their ideal habitat is made up of the clear, icy mountain streams of the Washington and Oregon Cascades and the coastal ranges of Oregon and California. (Oregon Wild)
-
-- Although the pacific giant salamander is not a particularly threatened species, it has some potential cause for concern. As an amphibian, it depends on a clean aquatic habitat for the survival of its young, and as foraging habitat. Logging and other human activities can lead to siltation and higher temperatures of stream waters, making important salamander habitat much less desirable. Amphibians such as the pacific giant salamander are considered indicators for the declining health of waterways. They are particularly sensitive to changes in water quality and are often the first to be affected by them. Healthy waterways and roadless areas free of logging are important for supporting the secure populations of pacific giant salamanders that currently exist in Oregon. (Oregon Wild)
+The Pacific giant salamander (Dicamptodon tenebrosus) is a vitally important member of the cool mountain stream ecosystems of the Washington and Oregon Cascades and coastal regions.  Reaching up to thirteen inches in length, these semi-aquatic creatures depend on clean aquatic habitats for survival *(Oregon Wild)*. With the current threat of logging and other anthropogenic activities in the region, the salamander's watershed ecosystem has been at risk.  Although not particularly threatened, the Pacific giant salamander is sensitive to some of these changes, specifically small changes in water quality. Given the current anthropogenic activities and their risks of stream siltation and higher stream temperatures, it is essential to analyze data on the salamander to assess the overall health of the watershed ecosystem.
 
 ![](salamander_pic.PNG){width=400px}  
 **Figure 1.** *Pacific giant salamander (Credit: [Sierra Nystrom](http://natural-history-journal.blogspot.com/2017/06/pacific-giant-salamander-at-prairie.html))*
 
-![](map1.PNG){width=400px}  
-**Figure 2.** *The Mack Creek study site is located in the HJ Andrews Experimental Forest, Oregon. (Credit: [Dana Warren](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020))*
-
-![](mack_creek.PNG){width=450px}  
-**Figure 3.** *Mack Creek, HJ Andrews Experimental Forest, OR (Credit: [Oregon State University](https://www.flickr.com/photos/oregonstateuniversity/7468126552/))*
-
+By measuring physical trends related to the species, along with land use and disturbance history, we can begin to glean the effects of the aforementioned human activity. Hopefully by doing this, recommendations can be made on how to proceed with logging and conservation in these regions.
 ```{r}
 # Attach necessary packages
+
 library(tidyverse)
 library(janitor)
 library(here)
@@ -42,9 +32,20 @@ library(directlabels)
 ```
 ### **Data and Methods**
 
-Data for vertebrate numbers and size from 1987-2017 was provided by the Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, OR (Andrews Forest LTER). The two sub-reaches of Mack Creek sampled are in a section of clearcut forest (ca. 1963) and an upstream 500 year old coniferous forest. The same 150 m reaches of stream (clearcut and old- growth) are monitored annually. In addition to performing the population measurements on the aquatic vertebrates, a standard set of channel measurements (channel type, wetted widths and depths) are taken. Sub-reaches are sampled with 2-pass electrofishing, and all captured vertebrates are measured and weighed. Beginning in 1993, the study began including sample data on Pacific giant salamanders, Dicamptodon tenebrosus, which is the core data set used in this analysis. For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-and&identifier=4027&revision=12). This analysis used chi-squared testing to compare differences between salamander counts. Mean salamander weights in 2017 were compared using a two-sided t-test for two groups (old growth vs. clear cut reaches of Mack Creek), and one-way ANOVA with post-hoc Tukey's when comparing >2 groups (channel classification); α = 0.05 was used throughout. Effect sizes were calculated using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
+Data for Pacific giant salamnder numbers and size from 1993-2017 was provided by the Aquatic Vertebrate Population Study conducted within Mack Creek in the Cascade Mountains of Oregon. Mack creek is located within The A.J. Andrews Experimental Forest which is part of the Long-Term Ecological Research (LTER) Network. Founded in 1948 by the US Forest Service, the forest is the center for forest and stream ecosystem research in the Pacific Northwest. Beginning in the 1950s, several small watersheds were manipulated (for example, logged or not logged) to lay a foundation for research on how the forest and streams interact *(Andrews Experimental Forest)*. For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-and&identifier=4027&revision=12). This analysis used chi-squared testing to compare differences between salamander counts. Mean salamander weights in 2017 were compared using a two-sided t-test for two groups (old growth vs. clear cut reaches of Mack Creek), and one-way ANOVA with post-hoc Tukey's when comparing >2 groups (channel classification); α = 0.05 was used throughout. Effect sizes were calculated using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
+
+![](map1.PNG){width=400px}  
+**Figure 2.** *The Mack Creek study site is located in the HJ Andrews Experimental Forest, Oregon. Salamander data for this analysis was collected from the area within the red sqaure. (Credit: [Dana Warren](https://www.researchgate.net/figure/Map-of-study-sites-and-the-HJ-Andrews-Experimental-forest-HJA-Each-dot-represents-a_fig1_314206020))*
+
+![](mack_creek.PNG){width=450px}  
+**Figure 3.** *Mack Creek, HJ Andrews Experimental Forest, OR. The landscape is steep, with hills and deep valleys. Cold and fast running streams flow through the many valleys of the forest, most of which consists of dense old-growth tree species. (Credit: [Oregon State University](https://www.flickr.com/photos/oregonstateuniversity/7468126552/))*
 
 ### **Results**
+
+#### 1. Does forest disturbance (logging) affect Pacific giant salamander abundance and distribution within Mack Creek?
+
+Since the salamanders can be sensitive to changes in water quality and temperature it is important to visualize the differences in salamander abundance between the section of Mack Creek that runs through old-growth forest and the section that runs through clearcut forest. Forest logging can accelerate erosion and opens up the forest floor to increased solar radiation, both of which may affect the salamanders 
+habitat. 
 
 ```{r}
 #-----------------
@@ -99,10 +100,13 @@ ggplot(data = sal_counts, aes(x = year, y = total_count)) +
             
 ```
 
-**Figure 4.** *Number of Pacific giant salamanders recorded in Mack Creek from 1993-2017. Salamander counts have been seperated by whether they were recorded in the section of creek that runs through old growth forest or forest that was clear cut. Data: Andrews Forest LTER*
+**Figure 4.** *Number of Pacific giant salamanders recorded in Mack Creek from 1993-2017. Salamander counts have been seperated by whether they were recorded in the section of creek that runs through old-growth forest or forest that was clearcut. Data: Andrews Forest LTER*
 
+We can see that trends in salamander abundance in both sections of the creek closely mirror one another from 1993 to 2017. In general, the abundance of Pacific giant salamander is greater in the old-growth section of Mack Creek. However, in 2003 salamander counts are nearly equal and in 2014 abundance within the clearcut section of the creek becomes greater and remains so through 2017. It appears that other enviornmental factors may play more of a factor then forest condition alone.
 
-**Figure 5.** *Number of Pacific giant salamanders recorded in Mack Creek in 2017 by creek section (OG/CC) and channel classification.*
+Another important trend we want to examine is if there is a significant effect of forest condition (old-growth or clearcut) on where in the channel salamanders are found (channel classification). To do so we used location data on where salamanders were observed in Mack Creek in 2017. 
+
+**Figure 5.** *Number of Pacific giant salamanders recorded in Mack Creek in 2017 by creek section (old-growth/clearcut) and channel classification.*
 ```{r}
 #-----------------
 # Results. Part B.
@@ -150,7 +154,11 @@ sal_counts_chi <- chisq.test(chi_sal_counts)
 
 ```
 
-There is not a significant association between forest condition (old growth/clear cut) on where in the channel salamanders are found (pool/side-channel/cascade) for salamanders sampled in 2017. ($\chi$^2^(`r sal_counts_chi$parameter`) = `r round(sal_counts_chi$statistic,2)`, *p* = `r round(sal_counts_chi$p.value, 3)`).
+Our analysis found that there is no significant association between forest condition (old-growth/clearcut) and where salamanders are found in the creek (pool/side-channel/cascade) in 2017 by a chi-squared test: ($\chi$^2^(`r sal_counts_chi$parameter`) = `r round(sal_counts_chi$statistic,2)`, *p* = `r round(sal_counts_chi$p.value, 3)`).
+
+#### 2. Does forest disturbance (logging) have an effect on Pacific giant salamander size within Mack Creek?
+
+In addition to analyzing the affect forest condition has on abundance, we want to see if it also has any effect on Pacific giant salamander size on average. To do so, we looked at recorded weights for these salamanders in 2017.
 
 ```{r}
 
@@ -158,7 +166,7 @@ There is not a significant association between forest condition (old growth/clea
 # Results. Part D.
 #------------------
 
-# Create data frames for salamanders sampled in 2017 for clear cut and old growth sections of Mack Creek
+# Create data frames for salamanders sampled in 2017 for clearcut and old-growth sections of Mack Creek
 
 sal_weights_cc <- salamander_data %>% 
   filter(year == "2017", section == "CC") 
@@ -175,8 +183,8 @@ sd_weights_cc <- sd(sal_weights_cc$weight, na.rm = TRUE)
 sd_weights_og <- sd(sal_weights_og$weight, na.rm = TRUE)
 
 # Calculate sample size (old growth vs. clear cut)
-n_2017_cc <- count(sal_weights_cc, na.rm = TRUE)
-n_2017_og <- count(sal_weights_og, na.rm = TRUE)
+n_2017_cc <- count(sal_weights_cc)
+n_2017_og <- count(sal_weights_og)
 
 # Perform two sided t-test on mean weights between clear cut and old growth sections of Mack Creek
 weight_ttest_og <- sal_weights_og %>% 
@@ -193,29 +201,6 @@ sal_weight_d <- cohen.d(weight_ttest_cc, weight_ttest_og, na.rm = TRUE)
 
 ```
 
-
-```{r}
-# Create histogram to explore sample data for normality (old growth vs. clear cut)
-sal_2017 <- salamander_data %>% 
-  filter(year == "2017") 
-
-ggplot(data = sal_2017, aes(x = weight)) +
-  geom_histogram(color = "black",
-                 fill = "deepskyblue3") +
-  facet_wrap(~riv_section) +
-  scale_x_continuous(expand = c(0,0),
-                     breaks = seq(0, 80, by = 10)) +
-  scale_y_continuous(expand = c(0,0),
-                     limits = c(0, 110)) +
-   theme_bw() +
-   labs(title = "Salamander Sample Normality Testing (Creek Section)",
-       subtitle = "Mack Creek, OR (2017)",
-       x = "Salamander Weights (grams)",
-       y = "Count")
-
-  
-```
-**Figure 6.**
 
 
 ```{r}
@@ -235,18 +220,23 @@ sal_summary_fc <- salamander_data %>%
 
 
 ```{r}
-# Creat beeswarm graph to compare salamander weights by creek section (CC vs OG)
+# Create beeswarm graph to compare salamander weights by creek section (CC vs OG)
+
+sal_2017 <- salamander_data %>% 
+  filter(year == "2017") 
 
 ggplot() +
    geom_beeswarm(data = sal_2017,
-                 aes(x = riv_section, y = weight, 
+                 aes(x = riv_section, 
+                     y = weight, 
                      color = riv_section),
                  size = 1,
                  show.legend = FALSE,
                  alpha = 0.5) +
   scale_color_manual(values = colors_riv_section) +
    geom_point(data = sal_summary_fc,
-              aes(x = riv_section, y = mean_weight),
+              aes(x = riv_section, 
+                  y = mean_weight),
               color = "black",
               size = 2.5)+
    geom_errorbar(data = sal_summary_fc,
@@ -257,16 +247,18 @@ ggplot() +
                  size = .75,
                  color = "black") +
   theme_bw() +
-  labs(title = "Mean Salamander Weight by Creek Section (2017)",
+  labs(title = "Mean Salamander Weight by Forest Condition (2017)",
        subtitle = "Mack Creek, OR",
-       x = "Creek Section (Forest Condition)",
+       x = "Forest Condition",
        y = "Salamander Weight (grams)") 
 
 ```
 
-**Figure 7.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by section of the creek found (CC/OG). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
+**Figure 6.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by section of the creek found (old-growth & clearcut). The black dot represents the sample mean with error bars representing the range of uncertainty. Data: Andrews Forest LTER* 
 
-**Figure 8.** *Pacific giant salamander sample statistics in 2017 by section of Mack Creek (CC/OG)*
+We can see that the majority of salamanders sampled in 2017 for both sections of the creek had a weight under 15 grams. Also notable are the several outliers in both the clearcut and old-growth sections of the creek that were signifincatly larger than most of the individuals in the samples. 
+
+**Figure 7.** *Pacific giant salamander sample statistics in 2017 by section of Mack Creek (old-growth/clearcut)*
 ```{r}
 # Create nicely formatted table for summary statistics on salamanders sampled in 2017 for old growth vs clear cut sections of Mack Creek
 
@@ -294,8 +286,13 @@ kable(sal_summary_fc_table) %>%
   
 ```
 
-There is not enough evidence to conclude that mean Pacific giant salamander size in the clear cut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific giant salamander size in the old growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
+In 2017, Pacific giant salamanders in the clearcut section of Mack Creek were on average 1.2 grams (18%) larger then those sampled in the old-growth section. While the sample data is skewed to the left with several outliers affecting the mean, the two sample sizes are quite large and for this reason we justified using a paramatric test to compare means between the two samples as the most appropriate.
 
+Our analysis found that there is not enough evidence to conclude that mean Pacific giant salamander size in the clearcut section of Mack Creek in 2017 (`r round(mean_weights_cc, 2)` $\pm$ `r round(sd_weights_cc, 2)`, n = `r n_2017_cc`) differed significantly from mean Pacific giant salamander size in the old-growth section of Mack Creek in 2017 (`r round(mean_weights_og, 2)` $\pm$ `r round(sd_weights_og, 2)`, n = `r n_2017_og`) by a two-sided, two sample t-test (t(`r round(sal_weight_ttest$parameter, 2)`) = `r round(sal_weight_ttest$statistic, 2)`, *p* = `r round(sal_weight_ttest$p.value, 3)`). In addition, the effect size between mean sizes is negligible (Cohen's *d* = `r round(sal_weight_d$estimate, 2)`). 
+
+#### 3. Does channel class have an effect on Pacific giant salamander size within Mack Creek?
+
+The uncertainty of precipitation patterns in the future could result in the size and flow of creeks in the Pacific Northwest drastically changing. If water flow is reduced this may lead to an increase in pool microhabitats and a loss in microhabitats such as cascades within a given creek. To test the significance this might have to Pacific giant salamanders it is important to see whether the species show signs of increased vitality in different creek classifications. To do so, we looked at mean salamander weights in three different creek classifications (pool, cascade, side channel) within Mack Creek in 2017.
 
 ```{r}
 #---------------------
@@ -319,52 +316,13 @@ sal_weights_class <- salamander_data %>%
      se_weight = sd(weight, na.rm = TRUE) / sqrt(n()),
      var_weight = var(weight, na.rm = TRUE)) 
 
-# Create Histogram to test for normality
- ggplot(data = sal_weights_class, aes(x = weight)) +
-  geom_histogram(color = "black",
-                 fill = "deepskyblue3") +
-  facet_wrap(~channel_class) +
-  scale_x_continuous(expand = c(0,0),
-                     breaks = seq(0, 80, by = 10)) +
-  scale_y_continuous(expand = c(0,0),
-                     limits = c(0, 130)) +
-   theme_bw() +
-   labs(title = "Salamanader Sample Normality Testing (1)",
-       subtitle = "Mack Creek, OR (2017)",
-       x = "Salamander Weights (grams)",
-       y = "Count")
-```
-
-**Figure 9.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. Data: Andrews Forest LTER*
-
-
-
-```{r}
-# Create a qq plot to test for normality
-ggplot(data = sal_weights_class, aes(sample = weight)) +
-  geom_qq()+
-  facet_wrap(~channel_class) +
-  theme_bw() +
-  labs(title = "Salamanader Sample Normality Testing (2)",
-       subtitle = "Mack Creek, OR (2017)",
-       x = "Theoretical Quantiles",
-       y = "Sample Quantiles")
 
 #-----------------------
-# Means do not have normal distribution, but ANOVA is relatively robust to 
-# violations # of the normality assumption and the equal variance assumption.
+# Means do not have normal distribution with several outliers, but ANOVA is 
+# relatively robust to violations of the normality assumption and the equal variance # assumption.
 #-----------------------
-
+ 
 ```
-
-**Figure 10.** *Using a quantile-quantile plot we can assess whther the 2017 salamander sample comes from a population that has weights which are normally distributed. We do not see the linear trend that would suggest normality for all three channel classifications. Data: Andrews Forest LTER*
-
-
-```{r}
-# Run levene test to test equal variance
-sal_levene <- leveneTest(weight ~ channel_class, data = sal_weights_class)
-```
-
 
 
 
@@ -397,10 +355,12 @@ ggplot() +
   
 ```
 
-**Figure 11.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
+**Figure 8.** *Recorded weights of Pacific giant salamanders sampled in Mack Creek in 2017 by channel classification. The black dot represents the sample mean with error bars representing the range of uncertainty.*
+
+We can see that the majority of salamanders sampled in 2017 for all three channel classifications also had a weight under 15 grams. Again, there are notable outliers that were significantly larger than most of the individuals in the sample. 
 
 
-**Figure 12.** *Pacific giant salamander sample statistics in 2017 by different channel classifications in Mack Creek*
+**Figure 9.** *Pacific giant salamander sample statistics in 2017 by different channel classifications within Mack Creek*
 ```{r}
 # Put summary statistics into a nicely formatted/renamed table
  
@@ -427,8 +387,19 @@ kable(sal_summary_table_tidy) %>%
                 position = "center")
 ```
 
+In 2017, Pacific giant salamanders sampled within pools in Mack Creek were the largest. On average, the pool salamanders were 1.78 grams (20%) larger then those found in cascades and 3.68 grams (65%) larger then those found in side-channels. Also notable is the number of salamanders found in pools was about 1/2 of those found in side-channels and nearly 1/6 of those found in cascades.
+
 
 ```{r}
+# Run levene test to test equal variance
+
+sal_levene <- leveneTest(weight ~ channel_class, data = sal_weights_class)
+
+```
+
+
+```{r}
+
 # Perform one-way ANOVA test
 salamander_aov <- aov(weight ~ channel_class, data = sal_weights_class)
 
@@ -438,7 +409,7 @@ salamander_lm <- lm(weight ~ channel_class, data = sal_weights_class)
 salamander_aov_t3 <- Anova(salamander_lm)
 
 #-----------------
-# No real difference between the two ANOVA tests
+# No real difference in p-value between the two ANOVA tests
 #-----------------
 
 # Perform Tukey's HSD for post-hoc testing
@@ -454,7 +425,7 @@ aov_outputs <- unlist(summary(salamander_aov))
 
 # Perform Cohen's d for salamander weight/channel classification
 side_chan_class_weight <- sal_weights_class %>% 
-  filter(unittype == "C") %>% 
+  filter(unittype == "P") %>% 
   pull(weight)
 
 pool_class_weight <- sal_weights_class %>% 
@@ -463,17 +434,27 @@ pool_class_weight <- sal_weights_class %>%
 
 creek_section_d <- cohen.d(side_chan_class_weight, pool_class_weight, na.rm = TRUE)
 
+
 ```
-Mean salamander weight (g) differed significantly between the three creek channel classifications (pool, cascade, side-channel) by a one-way ANOVA test (F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`). Further pairwise testing using pot-hoc Tukey's HSD revealed that mean salamander weight was only significantly different between side-channel and pool classifications (*p* = `r round(sal_post_hoc$channel_class[12],3)`). Though a significant difference in mean weight was found between salamanders sampled in the pools vs. side-channel sections of Mack Creek in 2017, the effect size was small (Cohen's *d* = `r round(creek_section_d$estimate, 2)`). 
+
+The sample data for salamander weight by channel class is similarly skewed to the left with several outliers affecting the mean. However, the sample size we are testing is adequately large and therefore we used a paramatric test to compare means between the three variables.
+
+Our analysis found that mean salamander weight (g) differed significantly between the three creek channel classifications (pool, cascade, side-channel) by a one-way ANOVA test (F(`r aov_outputs[1]`, `r aov_outputs[2]`) = `r round(aov_outputs[7],2)`, *p* = `r round(aov_outputs[9],3)`). Further pairwise testing using pot-hoc Tukey's HSD revealed that mean salamander weight was only significantly different between side-channel and pool classifications (*p* = `r round(sal_post_hoc$channel_class[12],3)`). Though a significant difference in mean weight was found between salamanders sampled in the pools vs. side-channel sections of Mack Creek in 2017, the effect size was small (Cohen's *d* = `r round(creek_section_d$estimate, 2)`). 
+
+##### **NOTE:** Given the amount of outliers within the data that may significantly shift the mean, it would be advisable during further analysis to perform rank-based tests to compare medians of the samples and see how the results compare. This would include a *Mann-Whitney U* test to compare salamander weights between the two forest conditions and *Kruskal-Wallis* to compare salamander weights in the three channel classifications.
 
 
 ### **Summary**
 
--
--
--
+- Pacific giant salamander populations, despite logging, have remained constant between 1993 and 2017.  Looking at the trend lines in Figure 4, it is apparent that regardless of forest condition, clear cut or old growth, the salamander population has thrived.  
+
+- After visually and analytically exploring salamander weights between the two forest conditions, it is apparent, given Figures 7 and 8, that there is not enough evidence to conclude that forest condition affects salamanders' weights; this further supports the notion that logging has had a limited effect on salamander health and population.  
+
+- Although salamander population size and weight do not differ between old-growth and clearcut forests, it is apparent, given Figure 9, that channel class did have a significant effect on salamander weight.  The "pool" class proved to have salamanders with the largest mean weight when compared to cascades and side channels.  Even though forest condition may not directly affect salamander weights, perhaps there is an unforeseen factor that is causing salamanders to grow larger in pools over side channels or cascades.  Further research would need to be done to determine the reasons behind this observation. 
 
 ### **References**
 **Gregory S. V. 2016.** Aquatic Vertebrate Population Study in Mack Creek, Andrews Experimental Forest, 1987 to present. Environmental Data Initiative. https://doi.org/10.6073/pasta/5de64af9c11579266ef20da2ff32f702. Dataset accessed 11/27/2019.
+
+“About the Andrews Forest.” HJ Andrews Experimental Forest, https://andrewsforest.oregonstate.edu/about.
 
 “Pacific Giant Salamander.” Wildlife Profiles, Oregon Wild, https://oregonwild.org/wildlife/pacific-giant-salamander.
